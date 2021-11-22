@@ -5,6 +5,7 @@ install.packages("ggplot2")
 install.packages("ggthemes")
 install.packages("dplyr")
 install.packages("scales")
+install.packages("httpgd")
 
 library(ggplot2)
 library(dplyr)
