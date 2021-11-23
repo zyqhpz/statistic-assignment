@@ -32,6 +32,11 @@ ggplot(vax_state, aes(x = date, y = daily, group = 1, color = state)) + geom_lin
 
 ggplot(vax_state, aes(x = date, y = daily, group = 1, color = state)) + geom_line() + labs(title = "Daily Vaccination Doses by State", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
 
+
+# select data only from state == "Selangor"
+vax_selangor <- vax_state[vax_state$state == "Selangor",]
+ggplot(vax_selangor, aes(x = date, y = daily, group = 1, color = state)) + geom_line() + labs(title = "Daily Vaccination Doses by State", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text())
+
 # use ggplot to plot the data in the vax_malaysia data frame
 
 # ggplot(vax_malaysia, aes(x = date, y = daily, group = 1)) + geom_line()
