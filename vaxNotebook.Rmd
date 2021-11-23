@@ -39,11 +39,11 @@ ggplot(vax_malaysia, aes(x = date, y = daily, group = 1)) + geom_line() + labs(t
 
 ```{r}
 # daily by state
-ggplot(vax_state, aes(x = date, y = daily, group = 1, color = state)) + geom_line() + labs(title = "Daily Vaccination Doses by State", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
+ggplot(vax_state, aes(x = as.Date(date), y = daily, group = 1, color = state)) + geom_line() + labs(title = "Daily Vaccination Doses by State", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
 ```
 
 ```{r}
-ggplot(vax_state, aes(x = date, y = daily, group = 1, color = state)) + geom_line() + labs(title = "Daily Vaccination Doses by State", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
+ggplot(vax_state, aes(x = as.Date(date), y = daily, group = 1, color = state)) + geom_line() + labs(title = "Daily Vaccination Doses by State", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
 ```
 
 ```{r}
@@ -58,6 +58,10 @@ vax_kl <- vax_state[vax_state$state == "W.P. Kuala Lumpur",]
 
 ggplot(vax_kl, aes(x = as.Date(date), y = daily, group = 1, color = state)) + geom_line() + labs(title = "Daily Vaccination Doses by State", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
 
+```
+
+```{r}
+ggplot(vax_malaysia, aes(x = as.Date(date), y = cumul_full, group = 1)) + scale_y_continuous(breaks = pretty_breaks(), labels = comma) + geom_line() + labs(title = "Cumulative Full Vaccination Doses in Malaysia", x = "Date", y = "Dose", color = "blue") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
 ```
 
 ```{r}
