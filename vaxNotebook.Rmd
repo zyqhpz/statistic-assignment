@@ -23,6 +23,7 @@ library(ggplot2)
 library(ggthemes)
 library(dplyr)
 library(scales)
+library(stringr)
 ```
 
 ```{r}
@@ -62,6 +63,10 @@ ggplot(vax_kl, aes(x = as.Date(date), y = daily, group = 1, color = state)) + ge
 
 ```{r}
 ggplot(vax_malaysia, aes(x = as.Date(date), y = cumul_full, group = 1)) + scale_y_continuous(breaks = pretty_breaks(), labels = comma) + geom_line() + labs(title = "Cumulative Full Vaccination Doses in Malaysia", x = "Date", y = "Dose", color = "blue") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
+```
+
+```{r}
+ggplot(vax_state, aes(x = as.Date(date), y = cumul_full, group = 1, color = state)) + scale_y_continuous(breaks = pretty_breaks(), labels = comma) + geom_line() + labs(title = str_wrap("Cumulative Full Vaccination Doses in Malaysia by State", 40), x = "Date", y = "Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
 ```
 
 ```{r}
