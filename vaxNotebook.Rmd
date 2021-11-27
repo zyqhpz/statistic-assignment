@@ -18,6 +18,14 @@ When you save the notebook, an HTML file containing the code and output will be 
 The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 
 ```{r}
+###
+# install.packages("ggplot2")
+# install.packages("ggthemes")
+# install.packages("scales")
+####
+
+update.packages(ask=FALSE)
+
 library(maps)
 library(ggplot2)
 library(ggthemes)
@@ -30,6 +38,7 @@ library(stringr)
 # Load data 
 vax_malaysia <- read.csv("E:/Programming/R/stats-assignment/dataset/covid19-public-main/vaccination/vax_malaysia.csv")
 vax_state <- read.csv("E:/Programming/R/stats-assignment/dataset/covid19-public-main/vaccination/vax_state.csv")
+population <- read.csv("E:/Programming/R/stats-assignment/dataset/covid19-public-main/static/population.csv")
 ```
 
 ```{r}
@@ -70,5 +79,23 @@ ggplot(vax_state, aes(x = as.Date(date), y = cumul_full, group = 1, color = stat
 ```
 
 ```{r}
+# Total population of Malaysia's citizens
+population_MY <- population[population$state == "Malaysia",]
+population_MY <- population_MY$pop
+# View(population_MY)
 
+# Total of vaccinated citizen
+full_vax_MY <- tail(vax_malaysia$cumul_full, n = 1)
+partial_vax_MY <- tail(vax_malaysia$cumul_partial, n = 1)
+# View(full_vax_MY)
+
+# calculate vaccinated citizen percentage
+full_percentage_MY <- round(((full_vax_MY/population_MY) * 100), digits = 2)
+partial_percentage_MY <- round(((partial_vax_MY/population_MY) * 100), digits = 2)
+# View(partial_percentage_MY)
+# View(full_percentage_MY)
+val_y <- c(partial_percentage_MY, full_percentage_MY)
+val_x <- c("Partial", "Full")
+
+ggplot(,aes(x = val_x, fill = val_y ))
 ```
