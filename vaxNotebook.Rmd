@@ -43,6 +43,7 @@ library(stringr)
 vax_malaysia <- read.csv("E:/Programming/R/stats-assignment/dataset/covid19-public-main/vaccination/vax_malaysia.csv")
 vax_state <- read.csv("E:/Programming/R/stats-assignment/dataset/covid19-public-main/vaccination/vax_state.csv")
 population <- read.csv("E:/Programming/R/stats-assignment/dataset/covid19-public-main/static/population.csv")
+cases_state <- read.csv("E:/Programming/R/stats-assignment/dataset/covid19-public-main/epidemic/cases_state.csv")
 ```
 
 ```{r}
@@ -165,11 +166,45 @@ partial_percentage_states <- round(((partial_vax_states/population_states$pop) *
 
 # View(full_percentage_states)
 val_y <- rep(c(partial_percentage_states, full_percentage_states), each = 1)
+val_y <- rep(c(partial_percentage_states, full_percentage_states))
+vy <- rep(partial_percentage_states, full_percentage_states)
 val_x <- rep(c("Partial", "Full"))
 val_z <- c(population_states$state)
 #View(val_z)
-val <- data.frame(state = val_z, partial = partial_percentage_states, full = full_percentage_states)
-val
+val <- data.frame(state = val_z, partial = partial_percentage_states, full = full_percentage_states, pct = val_y, status = rep(c("Partial", "Full")))
+#val
 
-ggplot(val, aes(state, full)) + theme_bw() + geom_bar(stat = "identity", position = position_dodge()) + geom_text(aes(label = val_y), vjust = -0.3, position = position_dodge(0.9), size = 4) + labs(x = "Status", y = "Percentage (%)", title = "Vaccinated Status in Malaysia") + ylim(0, 100)
+ggplot(val, aes(x = state, y = full, color = state)) + geom_bar(stat = "identity", fill = "white") + geom_text(aes(label = full), hjust = 1.5 , size = 3.5) + ylim(0, 100) + labs(x = "State", y = "Percentage (%)", title = "Vaccinated Status in Malaysia") + theme(legend.position = "none") + coord_flip()
+
 ```
+
+```{r}
+ggplot(val, aes(x = state, y = pct, color = state)) + geom_bar(stat = "identity", position = position_dodge(0.8), aes(fill = factor(pct), color = state), width = 0.8) + geom_text(aes(label = full, hjust = -2), size = 3) + labs(x = "State", y = "Percentage (%)", title = "Vaccinated Status in Malaysia") + theme(legend.position = "none") + ylim(0, 100) + coord_flip()
+```
+
+```{r}
+cases_selangor <- cases_state[cases_state$state == "Selangor",]
+cases_selangor <- data.frame(date = cases_selangor$date, daily = cases_selangor$cases_new)
+
+ggplot(cases_selangor, aes(x = as.Date(date), y = daily, group = 1)) + geom_line() + labs(title = "Daily New Cases in Selangor", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "3 month", labels = date_format("%d-%b-%y"))
+```
+
+```{r}
+vax_selangor <- vax_state[vax_state$state == "Selangor",]
+vax_selangor <- data.frame(date = vax_selangor$date, daily = vax_selangor$daily)
+cases_selangor <- cases_state[cases_state$state == "Selangor",]
+cases_selangor <- data.frame(date = cases_selangor$date, daily = cases_selangor$cases_new)
+#View(vax_selangor)
+cases_selangor <- cases_selangor[cases_selangor$date >= "2021-02-24",]
+#View(cases_selangor)
+
+comp_selangor <- rbind(vax_selangor, cases_selangor)
+
+comp_selangor <- data.frame(date = vax_selangor$date, vax = vax_selangor$daily, case = cases_selangor$daily)
+comp_selangor <- data.frame(date = vax_selangor$date, data = c(vax_selangor$daily, cases_selangor$daily))
+#View(comp_selangor)
+
+ggplot(comp_selangor, aes(x = as.Date(date), y = data , group = 2, color = data)) + geom_line() + labs(title = "Daily New Cases in Selangor", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
+```
+
+\
