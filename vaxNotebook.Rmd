@@ -21,6 +21,7 @@ The preview shows you a rendered HTML copy of the contents of the editor. Conseq
 install.packages("ggplot2")
 install.packages("ggthemes")
 install.packages("scales")
+install.packages("plyr")
 ```
 
 ```{r}
@@ -31,6 +32,7 @@ update.packages(ask=FALSE)
 library(maps)
 library(ggplot2)
 library(ggthemes)
+library(plyr)
 library(dplyr)
 library(scales)
 library(stringr)
@@ -114,12 +116,6 @@ population_states <- population[-c(1),]
 population_states <- subset(population_states, select = -c(idxs))
 population_states <- subset(population_states, select = -c(pop_12, pop_18, pop_60))
 
-pop_selangor <- population_states[population_states$state == "Selangor",]
-pop_kl <- population_states[population_states$state == "W.P. Kuala Lumpur",]
-pop_putra <- population_states[population_states$state == "W.P. Putrajaya",]
-
-#View(pop_kl)
-
 population_states <- population_states[order(population_states$state),]
 pop_states <- population_states[-c(12, 14, 16),]
 pop_kv <- population_states[c(12, 14, 16),]
@@ -139,12 +135,28 @@ population_states <- rbind(pop_states, pop_kv)
 #population_states <- population_states$pop
 #View(pop_states)
 
-
-View(population_states)
-
 # Total of vaccinated citizen
-full_vax_states <- c(tail(vax_state$cumul_full, n = 16))
-partial_vax_states <- c(tail(vax_state$cumul_partial, n = 16))
+v_state <- tail(vax_state, n = 16)
+v_st <- v_state[-c(12, 14, 16),]
+v_kv <- v_state[c(12, 14, 16),]
+v_kv <- data.frame(state = "Klang Valley", cumul_full = sum(v_kv$cumul_full), cumul_partial = sum(v_kv$cumul_partial))
+
+v_state <- rbind.fill(v_st, v_kv)
+
+#View(v_state)
+full_vax_states <- c(v_state$cumul_full)
+partial_vax_states <- c(v_state$cumul_partial)
+#View(full_vax_states)
+#
+#full_v_states <- full_vax_states[12, 14, 16]
+#View(full_v_states)
+#partial_v_states <- partial_vax_states[-c(12, 14, 16),]
+#
+#full_v_kv <- full_vax_states[c(12, 14, 16),]
+#partial_v_kv <- partial_vax_states[c(12, 14, 16),]
+#
+#full_v_kv <- full_join(full_v_kv)
+#View(full_v_kv)
 # View(full_vax_states)
 
 # calculate vaccinated citizen percentage
@@ -157,7 +169,7 @@ val_x <- rep(c("Partial", "Full"))
 val_z <- c(population_states$state)
 #View(val_z)
 val <- data.frame(state = val_z, partial = partial_percentage_states, full = full_percentage_states)
-View(val)
+val
 
 ggplot(val, aes(state, full)) + theme_bw() + geom_bar(stat = "identity", position = position_dodge()) + geom_text(aes(label = val_y), vjust = -0.3, position = position_dodge(0.9), size = 4) + labs(x = "Status", y = "Percentage (%)", title = "Vaccinated Status in Malaysia") + ylim(0, 100)
 ```
