@@ -100,5 +100,41 @@ val_y <- c(partial_percentage_MY, full_percentage_MY)
 val_x <- c("Partial", "Full")
 val <- data.frame(val_x, val_y)
 
-ggplot(val, aes(val_x, val_y)) + theme_bw() + geom_bar(stat = "identity", fill = c("#aef359", "#3cb043")) + geom_text(aes(label = val_y), vjust = -0.3, size = 4) + labs(x = "Status", y = "Percentage (%)", title = "Vaccinated Progress in Malaysia") + ylim(0, 100)
+ggplot(val, aes(val_x, val_y)) + theme_bw() + geom_bar(stat = "identity", fill = c("#aef359", "#3cb043")) + geom_text(aes(label = val_y), vjust = -0.3, size = 4) + labs(x = "Status", y = "Percentage (%)", title = "Vaccinated Status in Malaysia") + ylim(0, 100)
+```
+
+```{r}
+#i = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17)
+i <- 1:16
+i <- c("Johor", "Kedah", "Kelantan", "Melaka", "Negeri Sembilan", "Pahang", "Perak", "Perlis", "Pulau Pinang", "Sabah", "Sarawak", "Selangor", "Terengganu", "W.P. Kuala Lumpur", "W.P. Labuan", "W.P. Putrajaya")
+#View(i)
+
+#i = c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16")
+population_states <- population[-c(1),]
+typeof(population_states$state)
+#lice.index(population_states$idxs, i)
+population_states <- population_states[match(population_states$state, i),]
+View(population_states)
+# View(population_states)
+#population_states <- population_states$pop
+#View(population_states)
+
+# Total of vaccinated citizen
+full_vax_states <- c(tail(vax_state$cumul_full, n = 16))
+partial_vax_states <- c(tail(vax_state$cumul_partial, n = 16))
+# View(full_vax_states)
+
+# calculate vaccinated citizen percentage
+full_percentage_states <- round(((full_vax_states/population_states$pop) * 100), digits = 2)
+partial_percentage_states <- round(((partial_vax_states/population_states$pop) * 100), digits = 2)
+
+# View(full_percentage_states)
+val_y <- rep(c(partial_percentage_states, full_percentage_states), each = 1)
+val_x <- rep(c("Partial", "Full"))
+val_z <- c(population_states$state)
+#View(val_z)
+val <- data.frame(state = val_z, partial = partial_percentage_states, full = full_percentage_states)
+View(val)
+
+ggplot(val, aes(val_x, val_y)) + theme_bw() + geom_bar(stat = "identity", position = position_dodge()) + geom_text(aes(label = val_y), vjust = -0.3, position = position_dodge(0.9), size = 4) + labs(x = "Status", y = "Percentage (%)", title = "Vaccinated Status in Malaysia") + ylim(0, 100)
 ```
