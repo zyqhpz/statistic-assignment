@@ -108,16 +108,39 @@ ggplot(val, aes(val_x, val_y)) + theme_bw() + geom_bar(stat = "identity", fill =
 i <- 1:16
 i <- c("Johor", "Kedah", "Kelantan", "Melaka", "Negeri Sembilan", "Pahang", "Perak", "Perlis", "Pulau Pinang", "Sabah", "Sarawak", "Selangor", "Terengganu", "W.P. Kuala Lumpur", "W.P. Labuan", "W.P. Putrajaya")
 #View(i)
-
+i <- c("Selangor", "W.P. Kuala Lumpur", "W,P. Putrajaya")
 #i = c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16")
 population_states <- population[-c(1),]
-typeof(population_states$state)
-#lice.index(population_states$idxs, i)
+population_states <- subset(population_states, select = -c(idxs))
+population_states <- subset(population_states, select = -c(pop_12, pop_18, pop_60))
+
+pop_selangor <- population_states[population_states$state == "Selangor",]
+pop_kl <- population_states[population_states$state == "W.P. Kuala Lumpur",]
+pop_putra <- population_states[population_states$state == "W.P. Putrajaya",]
+
+#View(pop_kl)
+
 population_states <- population_states[order(population_states$state),]
+pop_states <- population_states[-c(12, 14, 16),]
+pop_kv <- population_states[c(12, 14, 16),]
+pop_kv <- data.frame(state = "Klang Valley", pop = sum(pop_kv$pop))
+
+population_states <- rbind(pop_states, pop_kv)
+
+#pop_kv <- summarise(state = "Klang Valley", pop = sum(pop_kv$pop))
+#pop_klangvalley <- merge(population, pop_kl)
+#pop_klangvalley <- rbind(population, pop_kl)
+#reshape(pop_klangvalley, timevar = "state",  direction = "wide")
+#View(pop_kv)
+#typeof(population_states$state)
+#lice.index(population_states$idxs, i)
 #View(population_states)
 # View(population_states)
 #population_states <- population_states$pop
-#View(population_states)
+#View(pop_states)
+
+
+View(population_states)
 
 # Total of vaccinated citizen
 full_vax_states <- c(tail(vax_state$cumul_full, n = 16))
