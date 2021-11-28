@@ -113,8 +113,8 @@ i <- c("Johor", "Kedah", "Kelantan", "Melaka", "Negeri Sembilan", "Pahang", "Per
 population_states <- population[-c(1),]
 typeof(population_states$state)
 #lice.index(population_states$idxs, i)
-population_states <- population_states[match(population_states$state, i),]
-View(population_states)
+population_states <- population_states[order(population_states$state),]
+#View(population_states)
 # View(population_states)
 #population_states <- population_states$pop
 #View(population_states)
@@ -136,5 +136,5 @@ val_z <- c(population_states$state)
 val <- data.frame(state = val_z, partial = partial_percentage_states, full = full_percentage_states)
 View(val)
 
-ggplot(val, aes(val_x, val_y)) + theme_bw() + geom_bar(stat = "identity", position = position_dodge()) + geom_text(aes(label = val_y), vjust = -0.3, position = position_dodge(0.9), size = 4) + labs(x = "Status", y = "Percentage (%)", title = "Vaccinated Status in Malaysia") + ylim(0, 100)
+ggplot(val, aes(state, full)) + theme_bw() + geom_bar(stat = "identity", position = position_dodge()) + geom_text(aes(label = val_y), vjust = -0.3, position = position_dodge(0.9), size = 4) + labs(x = "Status", y = "Percentage (%)", title = "Vaccinated Status in Malaysia") + ylim(0, 100)
 ```
