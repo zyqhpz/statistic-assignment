@@ -179,7 +179,15 @@ ggplot(val, aes(x = state, y = full, color = state)) + geom_bar(stat = "identity
 ```
 
 ```{r}
+val_x <- rep(c("Partial", "Full"))
+
 ggplot(val, aes(x = state, y = pct, color = state)) + geom_bar(stat = "identity", position = position_dodge(0.8), aes(fill = factor(pct), color = state), width = 0.8) + geom_text(aes(label = full, hjust = -2), size = 3) + labs(x = "State", y = "Percentage (%)", title = "Vaccinated Status in Malaysia") + theme(legend.position = "none") + ylim(0, 100) + coord_flip()
+
+ggplot(val, aes(x = state, y = pct, color = state)) + geom_bar(stat = "identity", position = position_dodge(0.8), aes(fill = factor(pct), color = state), width = 0.8) + geom_text(aes(label = full, hjust = -2), size = 3) + facet_wrap(~ state) + geom_density(alpha = 0.5) + labs(x = "State", y = "Percentage (%)", title = "Vaccinated Status in Malaysia") + theme(legend.position = "none") + ylim(0, 100) + coord_flip()
+
+ggplot(val, aes(x = state, y = pct)) + geom_bar(stat = "identity") + geom_text(aes(label = full, hjust = -2), size = 3) + labs(x = "State", y = "Percentage (%)", title = "Vaccinated Status in Malaysia") + theme(legend.position = "none") + ylim(0, 100)
+
+ggplot(val, aes(x = state, y = pct, color = state)) + facet_wrap(~ state) + geom_density(alpha = 0.5) + labs(x = "State", y = "Percentage (%)", title = "Vaccinated Status in Malaysia") + theme(legend.position = "none") + ylim(0, 100)
 ```
 
 ```{r}
@@ -201,10 +209,15 @@ cases_selangor <- cases_selangor[cases_selangor$date >= "2021-02-24",]
 comp_selangor <- rbind(vax_selangor, cases_selangor)
 
 comp_selangor <- data.frame(date = vax_selangor$date, vax = vax_selangor$daily, case = cases_selangor$daily)
-comp_selangor <- data.frame(date = vax_selangor$date, data = c(vax_selangor$daily, cases_selangor$daily))
+comp_selangor <- data.frame(date = vax_selangor$date, data = c(vax_selangor$daily, cases_selangor$daily), n = rep(c("Cases", "Vax"), each = 1))
+ds <- data.frame(date = vax_selangor$date, n = vax_selangor$daily, nc = cases_selangor$daily)
 #View(comp_selangor)
 
-ggplot(comp_selangor, aes(x = as.Date(date), y = data , group = 2, color = data)) + geom_line() + labs(title = "Daily New Cases in Selangor", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
+ggplot(ds, aes(x = as.Date(date), y = n)) + geom_line(color = "#69b3a2") + labs(title = "Daily Vaccination Dose in Selangor", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
+
+ggplot(ds, aes(x = as.Date(date), y = nc)) + geom_line(color = "#69b3a2") + labs(title = "Daily New Cases in Selangor", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
+
+ggplot(comp_selangor, aes(x = as.Date(date), y = data , group = n, color = data)) + geom_line() + labs(title = "Daily New Cases in Selangor", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b")) + theme(legend.position = "none")
 ```
 
 \
