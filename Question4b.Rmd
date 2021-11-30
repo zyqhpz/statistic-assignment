@@ -1,0 +1,39 @@
+---
+title: "Question 4b"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## i)
+
+```{r}
+# Generate random 15000 numbers, mean = 70, sd = 5
+number_random <- rnorm(15000, mean=70, sd=5)
+```
+
+## ii)
+
+```{r}
+hist(number_random)
+```
+
+## iii)
+
+```{r}
+h <- hist(number_random, main=paste("Histogram of number_random"), xlab="Number")
+text(h$mids, h$counts, labels=h$counts, adj=c(0.5, -0.5))
+#t <- h[h$counts < 60]
+#t
+t <- number_random[number_random < 60]
+length(t)
+```
+
+```{r}
+pnorm(-2) * 15000
+round((pnorm(-2) * 15000), digits = 0)
+ceiling((pnorm(-2) * 15000))
+1.005 * ceiling((pnorm(-2) * 15000)) # check margin of error
+```
