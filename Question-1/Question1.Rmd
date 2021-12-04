@@ -220,8 +220,6 @@ ggplot(ds, aes(x = as.Date(date), y = nc)) + geom_line(color = "#69b3a2") + labs
 ggplot(comp_selangor, aes(x = as.Date(date), y = data , group = n, color = data)) + geom_line() + labs(title = "Daily New Cases in Selangor", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b")) + theme(legend.position = "none")
 ```
 
-\
-
 ```{r}
 ggplot(ds, aes(x = as.Date(date), y = n)) + geom_line(color = "#69b3a2") + labs(title = "Daily Vaccination Dose in Selangor", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
 

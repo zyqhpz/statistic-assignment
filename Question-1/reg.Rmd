@@ -8,6 +8,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
+install.packages("maps")
 install.packages("ggplot2")
 install.packages("ggthemes")
 install.packages("scales")
@@ -33,8 +34,11 @@ reg_MY_url <- "E:/Programming/R/stats-assignment/dataset/citf-public-main/regist
 
 reg_state_url <- "E:/Programming/R/stats-assignment/dataset/citf-public-main/registration/vaxreg_state.csv"
 
+pop_url <- "E:/Programming/R/stats-assignment/dataset/covid19-public-main/static/population.csv"
+
 reg_MY <- read.csv(reg_MY_url)
 reg_state <- read.csv(reg_state_url)
+population <- read.csv(pop_url)
 ```
 
 ```{r}
@@ -44,8 +48,47 @@ ggplot(reg_MY, aes(x = as.Date(date), y = total )) + geom_line() + scale_y_conti
 ```
 
 ```{r}
-ggplot(reg_MY, aes(x = as.Date(date), y = children ))
-  + geom_line()
-  + scale_y_continuous(breaks = pretty_breaks(), labels = comma)
-  + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
+ggplot(reg_MY, aes(x = as.Date(date), y = children )) + geom_line() + scale_y_continuous(breaks = pretty_breaks(), labels = comma) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
+
+```
+
+```{r}
+adult <- reg_MY$total - reg_MY$elderly - reg_MY$children
+
+ggplot(reg_MY, aes(as.Date(date))) + geom_line(aes(y = total, color = "Total")) + geom_line(aes(y = children, color = "Children")) + geom_line(aes(y = adult, color = "Adult")) + geom_line(aes(y = elderly, color = "Elderly")) + scale_y_continuous(breaks = pretty_breaks(), labels = comma) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b")) + labs(x = "Date", y = "Total Registration", title = "Cumulative Total Registration For Vaccination in Malaysia", color = "Age Class")
+
+ggplot(reg_MY, aes(as.Date(date))) + geom_line(aes(y = total, color = "Total")) + geom_line(aes(y = children, color = "Below 18")) + geom_line(aes(y = adult, color = "18-59")) + geom_line(aes(y = elderly, color = "60 and above")) + scale_y_continuous(breaks = pretty_breaks(), labels = comma) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b")) + labs(x = "Date", y = "Total Registration", title = "Cumulative Total Registration For Vaccination in Malaysia", color = "Age Class")
+
+ggplot(reg_MY, aes(as.Date(date))) + geom_line(aes(y = total, color = "Total")) + geom_line(aes(y = children, color = "Below 18")) + geom_line(aes(y = adult, color = "18-59")) + geom_line(aes(y = elderly, color = "60 and above")) + scale_y_continuous(breaks = pretty_breaks(), labels = label_number(suffix = " M", scale = 1e-6)) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b")) + labs(x = "Date", y = "Total Registration", title = "Cumulative Total Registration For Vaccination in Malaysia", color = "Age Class")
+```
+
+```{r}
+# map ??
+ggplot(reg_state, aes(as.Date(date))) + geom_line(aes(y = total, color = "Total")) + facet_wrap(~ state) + geom_density(alpha = 1) + scale_y_continuous(labels = label_number(suffix = " M", scale = 1e-6))
+#+ scale_y_continuous(breaks = pretty_breaks(), labels = comma) 
+#+ scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
+```
+
+```{r}
+population_states <- population[-c(1),]
+population_states <- subset(population_states, select = -c(idxs))
+population_states <- subset(population_states, select = -c(pop_12, pop_18, pop_60))
+
+population_states <- population_states[order(population_states$state),]
+#View(population_states)
+pop_states <- population_states[-c(12, 14, 16),]
+pop_kv <- population_states[c(12, 14, 16),]
+pop_kv <- data.frame(state = "Klang Valley", pop = sum(pop_kv$pop))
+
+r_state <- tail(reg_state, n = 16)
+#View(r_state)
+
+#population_states <- rbind(pop_states, pop_kv)
+
+reg_rate <- round(r_state$total/population_states$pop * 100, digits = 2)
+
+reg_rate <- data.frame(state = population_states$state, rate = reg_rate)
+#View(reg_rate)
+
+ggplot(reg_rate, aes(x = state, y = rate, color = state)) + geom_bar(stat = "identity", fill = "white") + geom_text(aes(label = rate), hjust = 1.5 , size = 3.5) + labs(x = "State", y = "Percentage (%)", title = "Total Registered Percentage by State") + theme(legend.position = "none") + coord_flip()
 ```
