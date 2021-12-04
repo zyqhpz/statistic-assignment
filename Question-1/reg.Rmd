@@ -1,0 +1,51 @@
+---
+title: "Vaccination Registration"
+output: html_notebook # html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+install.packages("ggplot2")
+install.packages("ggthemes")
+install.packages("scales")
+install.packages("plyr")
+install.packages("dplyr")
+install.packages("scales")
+install.packages("stringr")
+```
+
+```{r}
+library(maps)
+library(ggplot2)
+library(ggthemes)
+library(plyr)
+library(dplyr)
+library(scales)
+library(stringr)
+```
+
+```{r}
+
+reg_MY_url <- "E:/Programming/R/stats-assignment/dataset/citf-public-main/registration/vaxreg_malaysia.csv"
+
+reg_state_url <- "E:/Programming/R/stats-assignment/dataset/citf-public-main/registration/vaxreg_state.csv"
+
+reg_MY <- read.csv(reg_MY_url)
+reg_state <- read.csv(reg_state_url)
+```
+
+```{r}
+ggplot(reg_MY, aes(x = as.Date(date), y = total )) + geom_line() + scale_y_continuous(expand = c(0,0), breaks = pretty_breaks(), labels = comma) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
+
+ggplot(reg_MY, aes(x = as.Date(date), y = total )) + geom_line() + scale_y_continuous(breaks = pretty_breaks(), labels = comma) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
+```
+
+```{r}
+ggplot(reg_MY, aes(x = as.Date(date), y = children ))
+  + geom_line()
+  + scale_y_continuous(breaks = pretty_breaks(), labels = comma)
+  + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
+```
