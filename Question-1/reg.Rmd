@@ -72,7 +72,7 @@ ggplot(reg_state, aes(as.Date(date))) + geom_line(aes(y = total, color = "Total"
 ```{r}
 population_states <- population[-c(1),]
 population_states <- subset(population_states, select = -c(idxs))
-population_states <- subset(population_states, select = -c(pop_12, pop_18, pop_60))
+#population_states <- subset(population_states, select = -c(pop_12, pop_18, pop_60))
 
 population_states <- population_states[order(population_states$state),]
 #View(population_states)
@@ -85,10 +85,21 @@ r_state <- tail(reg_state, n = 16)
 
 #population_states <- rbind(pop_states, pop_kv)
 
+# Total By State
 reg_rate <- round(r_state$total/population_states$pop * 100, digits = 2)
-
 reg_rate <- data.frame(state = population_states$state, rate = reg_rate)
 #View(reg_rate)
 
+# Total Adult by State
+reg_rate_adult <- round((r_state$total - r_state$children)/(population_states$pop_18 + population_states$pop_60) * 100, digits = 2)
+reg_rate_adult <- data.frame(state = population_states$state, rate = reg_rate_adult)
+
+reg_rate_children <- round(r_state$children/(population_states$pop -  population_states$pop_18 - population_states$pop_60) * 100, digits = 2)
+reg_rate_children <- data.frame(state = population_states$state, rate = reg_rate_children)
+
 ggplot(reg_rate, aes(x = state, y = rate, color = state)) + geom_bar(stat = "identity", fill = "white") + geom_text(aes(label = rate), hjust = 1.5 , size = 3.5) + labs(x = "State", y = "Percentage (%)", title = "Total Registered Percentage by State") + theme(legend.position = "none") + coord_flip()
+
+ggplot(reg_rate_adult, aes(x = state, y = rate, color = state)) + geom_bar(stat = "identity", fill = "white") + geom_text(aes(label = rate), hjust = 1.5 , size = 3.5) + labs(x = "State", y = "Percentage (%)", title = "Total Adult Registered Percentage by State") + theme(legend.position = "none") + coord_flip()
+
+ggplot(reg_rate_children, aes(x = state, y = rate, color = state)) + geom_bar(stat = "identity", fill = "white") + geom_text(aes(label = rate), hjust = 1.5 , size = 3.5) + labs(x = "State", y = "Percentage (%)", title = "Total Children Registered Percentage by State") + theme(legend.position = "none") + coord_flip()
 ```

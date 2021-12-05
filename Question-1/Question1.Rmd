@@ -18,10 +18,13 @@ When you save the notebook, an HTML file containing the code and output will be 
 The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 
 ```{r}
+install.packages("maps")
 install.packages("ggplot2")
 install.packages("ggthemes")
 install.packages("scales")
 install.packages("plyr")
+install.packages("dplyr")
+install.packages("stringr")
 ```
 
 ```{r}
@@ -103,7 +106,7 @@ val_y <- c(partial_percentage_MY, full_percentage_MY)
 val_x <- c("Partial", "Full")
 val <- data.frame(val_x, val_y)
 
-ggplot(val, aes(val_x, val_y)) + theme_bw() + geom_bar(stat = "identity", fill = c("#aef359", "#3cb043")) + geom_text(aes(label = val_y), vjust = -0.3, size = 4) + labs(x = "Status", y = "Percentage (%)", title = "Vaccinated Status in Malaysia") + ylim(0, 100)
+ggplot(val, aes(val_x, val_y)) + theme_bw() + geom_bar(stat = "identity", fill = c("#aef359", "#3cb043")) + geom_text(aes(label = val_y), vjust = -0.3, size = 4) + labs(x = "Status", y = "Percentage (%)", title = "Vaccination Status in Malaysia") + ylim(0, 100)
 ```
 
 ```{r}
@@ -164,17 +167,17 @@ partial_vax_states <- c(v_state$cumul_partial)
 full_percentage_states <- round(((full_vax_states/population_states$pop) * 100), digits = 2)
 partial_percentage_states <- round(((partial_vax_states/population_states$pop) * 100), digits = 2)
 
-# View(full_percentage_states)
+#View(full_percentage_states)
 val_y <- rep(c(partial_percentage_states, full_percentage_states), each = 1)
 val_y <- rep(c(partial_percentage_states, full_percentage_states))
 vy <- rep(partial_percentage_states, full_percentage_states)
 val_x <- rep(c("Partial", "Full"))
 val_z <- c(population_states$state)
 #View(val_z)
-val <- data.frame(state = val_z, partial = partial_percentage_states, full = full_percentage_states, pct = val_y, status = rep(c("Partial", "Full")))
-#val
+val <- data.frame(state = v_state$state, partial = partial_percentage_states, full = full_percentage_states, pct = val_y)
+val <- head(val, n = 14)
 
-ggplot(val, aes(x = state, y = full, color = state)) + geom_bar(stat = "identity", fill = "white") + geom_text(aes(label = full), hjust = 1.5 , size = 3.5) + ylim(0, 100) + labs(x = "State", y = "Percentage (%)", title = "Vaccinated Status in Malaysia") + theme(legend.position = "none") + coord_flip()
+ggplot(val, aes(x = state, y = full, color = state)) + geom_bar(stat = "identity", fill = "white") + geom_text(aes(label = full), hjust = 1.5 , size = 3.5) + ylim(0, 100) + labs(x = "State", y = "Percentage (%)", title = "Full Vaccinated Status in Malaysia") + theme(legend.position = "none") + coord_flip()
 
 ```
 
