@@ -44,7 +44,7 @@ population <- read.csv(pop_url)
 ```{r}
 ggplot(reg_MY, aes(x = as.Date(date), y = total )) + geom_line() + scale_y_continuous(expand = c(0,0), breaks = pretty_breaks(), labels = comma) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
 
-ggplot(reg_MY, aes(x = as.Date(date), y = total )) + geom_line() + scale_y_continuous(breaks = pretty_breaks(), labels = comma) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
+ggplot(reg_MY, aes(x = as.Date(date), y = total )) + geom_line() + scale_y_continuous(breaks = pretty_breaks(), labels = comma) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b")) + labs(x = "Date", y = "Total Registration", title = "Cumulative Total Registration For Vaccination in Malaysia", color = "Age Class")
 ```
 
 ```{r}
@@ -102,4 +102,13 @@ ggplot(reg_rate, aes(x = state, y = rate, color = state)) + geom_bar(stat = "ide
 ggplot(reg_rate_adult, aes(x = state, y = rate, color = state)) + geom_bar(stat = "identity", fill = "white") + geom_text(aes(label = rate), hjust = 1.5 , size = 3.5) + labs(x = "State", y = "Percentage (%)", title = "Total Adult Registered Percentage by State") + theme(legend.position = "none") + coord_flip()
 
 ggplot(reg_rate_children, aes(x = state, y = rate, color = state)) + geom_bar(stat = "identity", fill = "white") + geom_text(aes(label = rate), hjust = 1.5 , size = 3.5) + labs(x = "State", y = "Percentage (%)", title = "Total Children Registered Percentage by State") + theme(legend.position = "none") + coord_flip()
+```
+
+Pie chart registration medium
+
+```{r}
+reg_pie <- tail(reg_MY, n = 1)
+reg_pie <- data.frame(medium = c("MySejahtera", "Website"), value = c(reg_pie$mysj, reg_pie$web))
+ggplot(reg_pie, aes(x="", y=value, fill=medium)) + geom_bar(stat = "identity", width = 1, color = "white") + coord_polar("y", start=0) + theme_void() + labs(title = "Medium For Vaccination Registration", fill = "Medium")
+
 ```

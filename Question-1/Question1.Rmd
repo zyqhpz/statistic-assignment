@@ -47,6 +47,7 @@ vax_malaysia <- read.csv("E:/Programming/R/stats-assignment/dataset/covid19-publ
 vax_state <- read.csv("E:/Programming/R/stats-assignment/dataset/covid19-public-main/vaccination/vax_state.csv")
 population <- read.csv("E:/Programming/R/stats-assignment/dataset/covid19-public-main/static/population.csv")
 cases_state <- read.csv("E:/Programming/R/stats-assignment/dataset/covid19-public-main/epidemic/cases_state.csv")
+cases_malaysia <- read.csv("E:/Programming/R/stats-assignment/dataset/covid19-public-main/epidemic/cases_malaysia.csv")
 ```
 
 ```{r}
@@ -110,12 +111,6 @@ ggplot(val, aes(val_x, val_y)) + theme_bw() + geom_bar(stat = "identity", fill =
 ```
 
 ```{r}
-#i = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17)
-i <- 1:16
-i <- c("Johor", "Kedah", "Kelantan", "Melaka", "Negeri Sembilan", "Pahang", "Perak", "Perlis", "Pulau Pinang", "Sabah", "Sarawak", "Selangor", "Terengganu", "W.P. Kuala Lumpur", "W.P. Labuan", "W.P. Putrajaya")
-#View(i)
-i <- c("Selangor", "W.P. Kuala Lumpur", "W,P. Putrajaya")
-#i = c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16")
 population_states <- population[-c(1),]
 population_states <- subset(population_states, select = -c(idxs))
 population_states <- subset(population_states, select = -c(pop_12, pop_18, pop_60))
@@ -127,18 +122,6 @@ pop_kv <- data.frame(state = "Klang Valley", pop = sum(pop_kv$pop))
 
 population_states <- rbind(pop_states, pop_kv)
 
-#pop_kv <- summarise(state = "Klang Valley", pop = sum(pop_kv$pop))
-#pop_klangvalley <- merge(population, pop_kl)
-#pop_klangvalley <- rbind(population, pop_kl)
-#reshape(pop_klangvalley, timevar = "state",  direction = "wide")
-#View(pop_kv)
-#typeof(population_states$state)
-#lice.index(population_states$idxs, i)
-#View(population_states)
-# View(population_states)
-#population_states <- population_states$pop
-#View(pop_states)
-
 # Total of vaccinated citizen
 v_state <- tail(vax_state, n = 16)
 v_st <- v_state[-c(12, 14, 16),]
@@ -147,21 +130,9 @@ v_kv <- data.frame(state = "Klang Valley", cumul_full = sum(v_kv$cumul_full), cu
 
 v_state <- rbind.fill(v_st, v_kv)
 
-#View(v_state)
 full_vax_states <- c(v_state$cumul_full)
 partial_vax_states <- c(v_state$cumul_partial)
-#View(full_vax_states)
-#
-#full_v_states <- full_vax_states[12, 14, 16]
-#View(full_v_states)
-#partial_v_states <- partial_vax_states[-c(12, 14, 16),]
-#
-#full_v_kv <- full_vax_states[c(12, 14, 16),]
-#partial_v_kv <- partial_vax_states[c(12, 14, 16),]
-#
-#full_v_kv <- full_join(full_v_kv)
-#View(full_v_kv)
-# View(full_vax_states)
+
 
 # calculate vaccinated citizen percentage
 full_percentage_states <- round(((full_vax_states/population_states$pop) * 100), digits = 2)
@@ -173,11 +144,13 @@ val_y <- rep(c(partial_percentage_states, full_percentage_states))
 vy <- rep(partial_percentage_states, full_percentage_states)
 val_x <- rep(c("Partial", "Full"))
 val_z <- c(population_states$state)
-#View(val_z)
+
 val <- data.frame(state = v_state$state, partial = partial_percentage_states, full = full_percentage_states, pct = val_y)
 val <- head(val, n = 14)
 
-ggplot(val, aes(x = state, y = full, color = state)) + geom_bar(stat = "identity", fill = "white") + geom_text(aes(label = full), hjust = 1.5 , size = 3.5) + ylim(0, 100) + labs(x = "State", y = "Percentage (%)", title = "Full Vaccinated Status in Malaysia") + theme(legend.position = "none") + coord_flip()
+ggplot(val, aes(x = state, y = full, color = state)) + geom_bar(stat = "identity", fill = "white") + geom_text(aes(label = full), hjust = 1.5 , size = 3.5) + ylim(0, 100) + labs(x = "State", y = "Percentage (%)", title = "Fully Vaccinated Status by State") + theme(legend.position = "none") + coord_flip()
+
+ggplot(val, aes(x = state, y = partial, color = state)) + geom_bar(stat = "identity", fill = "white") + geom_text(aes(label = partial), hjust = 1.5 , size = 3.5) + ylim(0, 100) + labs(x = "State", y = "Percentage (%)", title = "Partially Vaccinated Status by State") + theme(legend.position = "none") + coord_flip()
 
 ```
 
@@ -228,5 +201,34 @@ ggplot(ds, aes(x = as.Date(date), y = n)) + geom_line(color = "#69b3a2") + labs(
 
 ggplot(ds, aes(x = as.Date(date), y = nc)) + geom_line(color = "#69b3a2") + labs(title = "Daily New Cases in Selangor", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
 
-ggplot(ds, aes(as.Date(date))) + geom_line(aes(y = n, color = "c2c2c2")) + geom_line(aes(y = nc, color = "b2b2b2"))
+ggplot(ds, aes(as.Date(date))) + geom_line(aes(y = n, color = "vaccination")) + geom_line(aes(y = nc, color = "new cases"))
+```
+
+```{r}
+cases_MY <- cases_malaysia[cases_malaysia$date >= "2021-02-24",]
+
+dt <- data.frame(date = vax_malaysia$date, vax = vax_malaysia$daily, case = cases_MY$cases_new)
+
+ggplot(dt, aes(x = as.Date(date))) + geom_line(aes(y = vax, color = "vax")) + geom_line(aes(y = case, color = "case")) + labs(title = "Daily Vaccine Doses given in Malaysia", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b"))
+```
+
+Vaccination Adult
+
+```{r}
+ggplot(vax_malaysia, aes(x = as.Date(date))) + geom_line(aes(y = cumul_partial, color = "Partial")) + geom_line(aes(y = cumul_full, color = "Full")) + labs(title = str_wrap("Adult Vaccination Progress in Malaysia", 40), x = "Date", y = "Dose", color = "Status") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b")) + scale_y_continuous(breaks = pretty_breaks(), labels = label_number(suffix = " M", scale = 1e-6))
+
+```
+
+Vaccination children
+
+```{r}
+vax_child <- vax_malaysia[vax_malaysia$date > "2021-08-01",]
+
+ggplot(vax_child, aes(x = as.Date(date))) + geom_line(aes(y = cumul_partial_child, color = "Partial")) + geom_line(aes(y = cumul_full_child, color = "Full")) + labs(title = str_wrap("Children Vaccination Progress in Malaysia", 40), x = "Date", y = "Dose", color = "Status") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "1 month", labels = date_format("%d-%b")) + scale_y_continuous(breaks = pretty_breaks(), labels = label_number(suffix = " M", scale = 1e-6))
+```
+
+Daily new cases in Malaysia
+
+```{r}
+ggplot(cases_malaysia, aes(x = as.Date(date), y = cases_new)) + geom_line(color = "#69b3a2") + labs(title = "Daily New Cases in Malaysia", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "3 month", labels = date_format("%d-%b-%y"))
 ```
