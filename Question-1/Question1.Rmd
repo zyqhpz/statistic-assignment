@@ -44,6 +44,7 @@ library(stringr)
 ```{r}
 # Load data 
 vax_malaysia <- read.csv("E:/Programming/R/stats-assignment/dataset/covid19-public-main/vaccination/vax_malaysia.csv")
+View(vax_malaysia)
 vax_state <- read.csv("E:/Programming/R/stats-assignment/dataset/covid19-public-main/vaccination/vax_state.csv")
 population <- read.csv("E:/Programming/R/stats-assignment/dataset/covid19-public-main/static/population.csv")
 cases_state <- read.csv("E:/Programming/R/stats-assignment/dataset/covid19-public-main/epidemic/cases_state.csv")
@@ -230,5 +231,5 @@ ggplot(vax_child, aes(x = as.Date(date))) + geom_line(aes(y = cumul_partial_chil
 Daily new cases in Malaysia
 
 ```{r}
-ggplot(cases_malaysia, aes(x = as.Date(date), y = cases_new)) + geom_line(color = "#69b3a2") + labs(title = "Daily New Cases in Malaysia", x = "Date", y = "Total Daily Dose", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "3 month", labels = date_format("%d-%b-%y"))
+ggplot(cases_malaysia, aes(x = as.Date(date), y = cases_new)) + geom_line(color = "#69b3a2") + labs(title = "Daily New Cases in Malaysia", x = "Date", y = "Daily New Cases", color = "State") + theme_fivethirtyeight() + theme(axis.title = element_text()) + scale_x_date(date_breaks = "3 month", labels = date_format("%d-%b-%y"))
 ```
